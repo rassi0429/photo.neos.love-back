@@ -23,13 +23,15 @@ class PhotosDTO {
 
 class CreatePhotosDTO {
   url: string;
+  comment: string;
+  tags: string;
 }
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('imageReq')
+  @Get('v1/imageReq')
   @UseGuards(AccountGuard)
   async requestImageUpload(): Promise<string> {
     const directUploadUrl = await axios.post(
@@ -40,7 +42,7 @@ export class AppController {
     return directUploadUrl.data;
   }
 
-  @Get('photos')
+  @Get('v1/photos')
   async getPhotos(@Query() photosDTO: PhotosDTO) {
     return this.appService.getPhotos(
       photosDTO.limit || 50,
@@ -50,18 +52,18 @@ export class AppController {
     );
   }
 
-  @Post('photo')
+  @Post('v1/photo')
   @UseGuards(AccountGuard)
   async addPhoto(
     @Headers('token') token: string,
     @Query() create: CreatePhotosDTO,
   ) {
     const data = await admin.auth().verifyIdToken(token);
-    return this.appService.addPhoto(create.url, 'hage', data.uid, []);
-  }
-
-  @Get('')
-  async test() {
-    this.appService.test();
+    return this.appService.addPhoto(
+      create.url,
+      create.comment,
+      data.uid,
+      JSON.parse(create.tags),
+    );
   }
 }
