@@ -16,7 +16,7 @@ async function bootstrap() {
     res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
     next();
   });
-  await app.listen(3001);
+  await app.listen(3080);
 }
 
 firebase.initialize();

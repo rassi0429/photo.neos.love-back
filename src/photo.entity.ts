@@ -23,7 +23,10 @@ export class Photo {
   @Column()
   comment: string;
 
-  @ManyToMany((type) => Tag, (tag) => tag.photos, {
+  @Column({ type: 'datetime' })
+  createDate: Date;
+
+  @ManyToMany(() => Tag, (tag) => tag.photos, {
     cascade: ['insert'],
   })
   @JoinTable()

@@ -21,6 +21,9 @@ export class Moment {
   @Column()
   author: string;
 
+  @Column({ type: 'datetime' })
+  createDate: Date;
+
   @ManyToMany(() => Photo)
   @JoinTable()
   photos: Photo[];
