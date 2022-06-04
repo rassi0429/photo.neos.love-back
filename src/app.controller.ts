@@ -67,6 +67,21 @@ export class AppController {
     );
   }
 
+  @Post('v1/photo')
+  @UseGuards(AccountGuard)
+  async addPhoto(
+    @Headers('token') token: string,
+    @Body() create: CreatePhotosDTO,
+  ) {
+    const data = await admin.auth().verifyIdToken(token);
+    return this.appService.addPhoto(
+      create.url,
+      create.comment,
+      data.uid,
+      JSON.parse(create.tags),
+    );
+  }
+
   @Get('v1/photo/:id')
   async getPhoto(@Param('id') id: number) {
     if (!id) {
@@ -165,20 +180,5 @@ export class AppController {
   @Get('/v1/moment/:id')
   async getMoment(@Param('id') momentId: number) {
     return this.appService.getMomentById(momentId);
-  }
-
-  @Post('v1/photo')
-  @UseGuards(AccountGuard)
-  async addPhoto(
-    @Headers('token') token: string,
-    @Query() create: CreatePhotosDTO,
-  ) {
-    const data = await admin.auth().verifyIdToken(token);
-    return this.appService.addPhoto(
-      create.url,
-      create.comment,
-      data.uid,
-      JSON.parse(create.tags),
-    );
   }
 }
