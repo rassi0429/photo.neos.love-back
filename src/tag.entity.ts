@@ -6,7 +6,7 @@ export class Tag {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'text' })
   name: string;
 
   @ManyToMany((type) => Photo, (photo) => photo.tags)

@@ -20,7 +20,7 @@ export class Photo {
   @Column()
   author: string;
 
-  @Column()
+  @Column({ type: 'text' })
   comment: string;
 
   @Column({ type: 'datetime' })

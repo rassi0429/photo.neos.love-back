@@ -8,12 +8,12 @@ export class UserInfo {
   @Column()
   uid: string;
 
-  @Column()
+  @Column({ type: 'text' })
   name: string;
 
   @Column()
   twitterId: string;
 
-  @Column()
+  @Column({ type: 'text' })
   twitterImage: string;
 }
