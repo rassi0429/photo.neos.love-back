@@ -22,3 +22,4 @@ services:
     restart: always
     environment:
       - DB_HOST=db
+      - DB_POST=3306
