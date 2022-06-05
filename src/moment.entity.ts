@@ -21,6 +21,9 @@ export class Moment {
   @Column()
   author: string;
 
+  @Column({ default: '' })
+  thumbnail?: string;
+
   @Column({ type: 'datetime' })
   createDate: Date;
 

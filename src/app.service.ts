@@ -5,6 +5,12 @@ import { Photo } from './photo.entity';
 import { Moment } from './moment.entity';
 import { Tag } from './tag.entity';
 import { UserInfo } from './userinfo.entity';
+import { createCanvas, loadImage } from 'canvas';
+import axios from 'axios';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const FormData = require('form-data');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { cloudflare } = require('../credentials/secrets.json');
 
 @Injectable()
 export class AppService {
@@ -73,7 +79,53 @@ export class AppService {
     moment.author = uid;
     moment.photos = photos;
     moment.createDate = new Date();
-    return await this.momentRepository.save(moment);
+    const m = await this.momentRepository.save(moment);
+    this.generateThumbnail(m);
+    return m;
+  }
+
+  async generateThumbnail(moment: Moment) {
+    const canvas = createCanvas(1600, 900);
+    const ctx = canvas.getContext('2d');
+    const len = moment.photos.length >= 4 ? 4 : moment.photos.length;
+    const imgs = [];
+    for (let i = 0; i < len; i++) {
+      imgs.push(await loadImage(moment.photos[i].url.replace('public', 'ogp')));
+    }
+
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (len == 4) {
+      ctx.drawImage(imgs[0], 0, 0);
+      ctx.drawImage(imgs[1], 800, 0);
+      ctx.drawImage(imgs[2], 0, 450);
+      ctx.drawImage(imgs[3], 800, 450);
+    } else if (len == 3) {
+      ctx.drawImage(imgs[2], 0, 0, 800, 450, 400, 0, 1600, 900);
+      ctx.drawImage(imgs[0], 0, 0);
+      ctx.drawImage(imgs[1], 0, 450);
+    } else if (len == 2) {
+      ctx.drawImage(imgs[0], 200, 0, 800, 450, 0, 0, 1600, 900);
+      ctx.drawImage(imgs[1], 200, 0, 800, 450, 800, 0, 1600, 900);
+    } else {
+      ctx.drawImage(imgs[0], 0, 0, 800, 450, 0, 0, 1600, 900);
+    }
+    const directUploadUrl = await axios.post(
+      `https://api.cloudflare.com/client/v4/accounts/${cloudflare.id}/images/v2/direct_upload`,
+      null,
+      { headers: { Authorization: `Bearer ${cloudflare.key}` } },
+    );
+    const url = directUploadUrl.data.result.uploadURL;
+    const params = new FormData();
+    params.append('file', canvas.toBuffer());
+    const res = await axios.post(url, params, {
+      headers: { 'content-type': 'multipart/form-data' },
+    });
+    moment.thumbnail = res.data.result.variants.filter((k) =>
+      k.includes('public'),
+    )[0];
+    return this.momentRepository.save(moment);
   }
 
   async getMomentById(momentId: number) {
