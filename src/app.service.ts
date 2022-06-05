@@ -142,8 +142,13 @@ export class AppService {
     }
   }
 
+  async sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
   async generateMomentThumbnail(moment: Moment) {
     try {
+      await this.sleep(5000);
       const canvas = createCanvas(1600, 900);
       const ctx = canvas.getContext('2d');
       const len = moment.photos.length >= 4 ? 4 : moment.photos.length;
