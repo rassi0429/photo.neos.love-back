@@ -14,3 +14,11 @@ services:
       - MYSQL_DATABASE=photo
       - MYSQL_USER=neos
       - MYSQL_PASSWORD=password
+  node:
+    build: .
+    ports:
+      - 127.0.0.1:3080:3080
+    init: true
+    restart: always
+    environment:
+      - DB_HOST=db
