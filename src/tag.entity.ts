@@ -9,6 +9,9 @@ export class Tag {
   @Column({ type: 'text' })
   name: string;
 
+  @Column({ default: '' })
+  thumbnail?: string;
+
   @ManyToMany((type) => Photo, (photo) => photo.tags)
   photos: Photo[];
 }
