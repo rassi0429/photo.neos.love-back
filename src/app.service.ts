@@ -130,7 +130,10 @@ export class AppService {
         const params = new FormData();
         params.append('file', canvas.toBuffer());
         const res = await axios.post(url, params, {
-          headers: params.getHeaders(),
+          headers: {
+            ...params.getHeaders(),
+            'Content-Length': params.getLengthSync(),
+          },
         });
         tag.thumbnail = res.data.result.variants.filter((k) =>
           k.includes('public'),
@@ -186,7 +189,10 @@ export class AppService {
       const params = new FormData();
       params.append('file', canvas.toBuffer());
       const res = await axios.post(url, params, {
-        headers: params.getHeaders(),
+        headers: {
+          ...params.getHeaders(),
+          'Content-Length': params.getLengthSync(),
+        },
       });
       moment.thumbnail = res.data.result.variants.filter((k) =>
         k.includes('public'),
