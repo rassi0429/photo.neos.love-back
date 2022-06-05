@@ -38,3 +38,4 @@ mariadb/
 dbdata/
 
 credentials/secrets.json
+backups/
