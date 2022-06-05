@@ -11,7 +11,7 @@ paths:
   /user:
     post:
       summary: ''
-      operationId: post-user
+      operationId: UserData Update
       responses:
         '200':
           description: OK
@@ -31,7 +31,7 @@ paths:
         required: true
     get:
       summary: ''
-      operationId: get-user-id
+      operationId: Get UserData
       responses:
         '200':
           description: OK
@@ -83,7 +83,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Get User Photo
       tags: []
       responses: {}
       operationId: get-user-id-photos
@@ -126,7 +126,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Get User Moments
       tags: []
       responses: {}
       operationId: get-user-id-moments
@@ -169,7 +169,7 @@ paths:
   /moment:
     post:
       summary: ''
-      operationId: post-moment
+      operationId: Create New Moment
       responses:
         '200':
           description: OK
@@ -200,7 +200,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Get Moment from Id
       tags: []
       responses: {}
       operationId: get-moment-id
@@ -251,7 +251,7 @@ paths:
   /photo:
     post:
       summary: ''
-      operationId: post-photo
+      operationId: Create Photo
       responses:
         '200':
           description: OK
@@ -282,7 +282,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Get Photo from Id
       tags: []
       responses: {}
       operationId: get-photo-id
@@ -317,7 +317,7 @@ paths:
             examples: {}
     post:
       summary: ''
-      operationId: post-photo-id
+      operationId: Update Photo from Id
       responses:
         '200':
           description: OK
@@ -343,7 +343,7 @@ paths:
                     type: string
     delete:
       summary: ''
-      operationId: delete-photo-id
+      operationId: Delete Photo
       responses:
         '200':
           description: OK
@@ -356,7 +356,7 @@ paths:
       description: delete token from id
   /photos:
     get:
-      summary: Your GET endpoint
+      summary: Get Photos
       tags: []
       responses: {}
       operationId: get-photos
@@ -410,7 +410,7 @@ paths:
             examples: {}
   /imageReq:
     get:
-      summary: Your GET endpoint
+      summary: Get Photo upload URL
       tags: []
       responses: {}
       operationId: get-imageReq
