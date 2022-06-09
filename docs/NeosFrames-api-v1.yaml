@@ -75,6 +75,11 @@ paths:
                     moment:
                       type: integer
             examples: {}
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: emap
   '/user/{id}/photos':
     parameters:
       - schema:
@@ -118,6 +123,11 @@ paths:
                         thumbnail:
                           type: string
             examples: {}
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: emap
   '/user/{id}/moments':
     parameters:
       - schema:
@@ -165,7 +175,11 @@ paths:
                           type: string
             examples: {}
       description: get all moments from userid
-      parameters: []
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: emap
   /moment:
     post:
       summary: ''
@@ -248,6 +262,11 @@ paths:
                             thumbnail:
                               type: string
             examples: {}
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: emap
   /photo:
     post:
       summary: ''
@@ -315,6 +334,11 @@ paths:
                       thumbnail:
                         type: string
             examples: {}
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: emap
     post:
       summary: ''
       operationId: Update Photo from Id
@@ -378,6 +402,10 @@ paths:
             type: string
           in: query
           name: uid
+        - schema:
+            type: boolean
+          in: query
+          name: emap
       requestBody:
         content:
           application/json:
