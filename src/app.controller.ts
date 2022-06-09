@@ -18,12 +18,17 @@ import { AccountGuard } from './account.guard';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { cloudflare } = require('../credentials/secrets.json');
 import { Headers } from '@nestjs/common';
+import { ToBoolean } from './toboolean';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const j2e = require('json2emap');
 
 class PhotosDTO {
   limit?: number;
   page?: number;
   tags?: string[];
   uid?: string;
+  @ToBoolean()
+  emap?: boolean;
 }
 
 class CreatePhotosDTO {
@@ -40,6 +45,11 @@ class UpdatePhotoDTO {
 class CreateMomentDTO {
   title: string;
   photos: number[];
+}
+
+class emapDTO {
+  @ToBoolean()
+  emap?: boolean;
 }
 
 @Controller()
@@ -59,12 +69,13 @@ export class AppController {
 
   @Get('v1/photos')
   async getPhotos(@Query() photosDTO: PhotosDTO) {
-    return this.appService.getPhotos(
+    const data = await this.appService.getPhotos(
       photosDTO.limit || 50,
       photosDTO.page || 0,
       photosDTO.tags || [],
       photosDTO.uid || null,
     );
+    return photosDTO.emap ? j2e(JSON.parse(JSON.stringify(data))) : data;
   }
 
   @Post('v1/photo')
@@ -83,7 +94,7 @@ export class AppController {
   }
 
   @Get('v1/photo/:id')
-  async getPhoto(@Param('id') id: number) {
+  async getPhoto(@Param('id') id: number, @Query() query: emapDTO) {
     if (!id) {
       throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
       return;
@@ -93,7 +104,7 @@ export class AppController {
       throw new HttpException('not found', HttpStatus.NOT_FOUND);
       return;
     }
-    return photo;
+    return query.emap ? j2e(JSON.parse(JSON.stringify(photo))) : photo;
   }
 
   @Post('v1/photo/:id')
@@ -129,8 +140,9 @@ export class AppController {
   }
 
   @Get('v1/tag/:id')
-  async getPhotoByTag(@Param('id') id: string) {
-    return this.appService.getPhotoByTag(id);
+  async getPhotoByTag(@Param('id') id: string, @Query() query: emapDTO) {
+    const data = await this.appService.getPhotoByTag(id);
+    return query.emap ? j2e(JSON.parse(JSON.stringify(data))) : data;
   }
 
   @Post('v1/user')
@@ -147,20 +159,23 @@ export class AppController {
   }
 
   @Get('v1/user/:id')
-  async getUserInfo(@Param('id') userId: string) {
+  async getUserInfo(@Param('id') userId: string, @Query() query: emapDTO) {
     const user = await this.appService.getUserInfo(userId);
     const countInfo = await this.appService.getCountInfo(userId);
-    return { user, countInfo };
+    const data = { user, countInfo };
+    return query.emap ? j2e(JSON.parse(JSON.stringify(data))) : data;
   }
 
   @Get('v1/user/:id/moments')
-  async getUserMomentData(@Param('id') userid) {
-    return this.appService.getMomentByUserId(userid);
+  async getUserMomentData(@Param('id') userid, @Query() query: emapDTO) {
+    const data = await this.appService.getMomentByUserId(userid);
+    return query.emap ? j2e(JSON.parse(JSON.stringify(data))) : data;
   }
 
   @Get('v1/user/:id/photos')
-  async getUserPhotoData(@Param('id') userid) {
-    return this.appService.getPhotoByUserId(userid);
+  async getUserPhotoData(@Param('id') userid, @Query() query: emapDTO) {
+    const data = this.appService.getPhotoByUserId(userid);
+    return query.emap ? j2e(JSON.parse(JSON.stringify(data))) : data;
   }
 
   @Post('v1/moment')
@@ -178,7 +193,8 @@ export class AppController {
   }
 
   @Get('/v1/moment/:id')
-  async getMoment(@Param('id') momentId: number) {
-    return this.appService.getMomentById(momentId);
+  async getMoment(@Param('id') momentId: number, @Query() query: emapDTO) {
+    const data = await this.appService.getMomentById(momentId);
+    return query.emap ? j2e(JSON.parse(JSON.stringify(data))) : data;
   }
 }
